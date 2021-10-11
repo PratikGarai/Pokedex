@@ -1,10 +1,10 @@
-import firebase from "firebase/app";
-import "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { readable } from "svelte/store";
 
 import { firebaseConfig } from "./secrets";
 
-firebase.initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 const userMapper = claims => ({
     id : claims.user_id, 
@@ -14,9 +14,9 @@ const userMapper = claims => ({
 })
 
 export const initAuth = (useRedirect = false) => {
-    const auth = firebase.auth()
+    const auth = getAuth()
     const loginWithGoogle = () => {
-        const provider = new firebase.auth.GoogleAuthProvider()
+        const provider = new GoogleAuthProvider()
         if (useRedirect) {
             return auth.signInWithRedirect(provider)
         } else {
