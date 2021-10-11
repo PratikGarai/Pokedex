@@ -4,6 +4,6 @@
     export const { user, loginWithGoogle } = initAuth();
 
     user.subscribe((v) => {
-        console.log(v);
+        console.log("User : ", v);
     });
 </script>

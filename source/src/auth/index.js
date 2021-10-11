@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged } from "firebase/auth";
 import { readable } from "svelte/store";
 
 import { firebaseConfig } from "./secrets";
@@ -7,10 +7,10 @@ import { firebaseConfig } from "./secrets";
 initializeApp(firebaseConfig);
 
 const userMapper = claims => ({
-    id : claims.user_id, 
-    name : claims.name, 
-    email : claims.email, 
-    picture : claims.picture
+    id: claims.user_id,
+    name: claims.name,
+    email: claims.email,
+    picture: claims.picture
 })
 
 export const initAuth = (useRedirect = false) => {
@@ -18,14 +18,14 @@ export const initAuth = (useRedirect = false) => {
     const loginWithGoogle = () => {
         const provider = new GoogleAuthProvider()
         if (useRedirect) {
-            return auth.signInWithRedirect(provider)
+            return signInWithRedirect(auth, provider)
         } else {
-            return auth.signInWithPopup(provider)
+            return signInWithPopup(auth, provider)
         }
     }
 
     const user = readable(null, set => {
-        const unsub = auth.onAuthStateChanged(async fireUser => {
+        const unsub = onAuthStateChanged(auth, async fireUser => {
             if (fireUser) {
                 const token = await fireUser.getIdTokenResult()
                 const user = userMapper(token.claims)
@@ -34,12 +34,11 @@ export const initAuth = (useRedirect = false) => {
                 set(null)
             }
         })
-
         return unsub
     })
 
     return {
-        user, 
+        user,
         loginWithGoogle
     }
 }
