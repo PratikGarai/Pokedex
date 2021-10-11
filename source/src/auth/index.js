@@ -15,6 +15,7 @@ const userMapper = claims => ({
 
 export const initAuth = (useRedirect = false) => {
     const auth = getAuth()
+
     const loginWithGoogle = () => {
         const provider = new GoogleAuthProvider()
         if (useRedirect) {
@@ -37,8 +38,11 @@ export const initAuth = (useRedirect = false) => {
         return unsub
     })
 
+    const logout = () => auth.signOut();
+
     return {
         user,
-        loginWithGoogle
+        loginWithGoogle,
+        logout
     }
 }
