@@ -6,7 +6,9 @@
     user.subscribe((v) => (_user = v));
 </script>
 
-<main>
+<main
+    class="w-full flex justify-between items-center bg-red-500 p-4 text-white"
+>
     {#if _user}
         <button on:click={logout}> Logout </button>
     {:else}
